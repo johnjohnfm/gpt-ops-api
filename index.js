@@ -1,7 +1,12 @@
+// index.js
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const { validateInstruction } = require("./validators/validateInstruction");
+
+// ✅ DEFAULT IMPORT to match module.exports = validateInstruction
+const validateInstruction = require("./validators/validateInstruction");
+
 const { callGPT } = require("./utils/gptWrapper");
 const { parseGPTResponse } = require("./utils/parseResponse");
 
@@ -23,7 +28,17 @@ app.post("/api/validate", async (req, res) => {
     useAI
   } = req.body;
 
-  const validation = validateInstruction(instruction, { mode, failure_type });
+  // ✅ Pass entire object to match validateInstruction signature
+  const validation = await validateInstruction({
+    instruction,
+    failure_type,
+    mode,
+    context_tags,
+    desired_fix_type,
+    language_register,
+    target_role,
+    useAI
+  });
 
   if (useAI) {
     try {
