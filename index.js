@@ -47,8 +47,7 @@ Return ONLY a valid JSON object in the following schema:
   "enhanced_instruction": "...",
   "rationale": "...",
   "recovered_node_score": 1.0
-}
-    `.trim();
+}`.trim();
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
