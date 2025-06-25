@@ -4,8 +4,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-// ✅ DEFAULT IMPORT to match module.exports = validateInstruction
-const validateInstruction = require("./validators/validateInstruction");
+// ✅ USE LOGIC+ VALIDATOR MODULE (v1)
+const validateInstruction = require("./validators/logicPlusValidator");
 
 const { callGPT } = require("./utils/gptWrapper");
 const { parseGPTResponse } = require("./utils/parseResponse");
@@ -28,7 +28,6 @@ app.post("/api/validate", async (req, res) => {
     useAI
   } = req.body;
 
-  // ✅ Pass entire object to match validateInstruction signature
   const validation = await validateInstruction({
     instruction,
     failure_type,
