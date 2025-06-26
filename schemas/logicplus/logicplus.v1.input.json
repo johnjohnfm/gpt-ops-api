@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LogicPlus Validation Input",
+  "type": "object",
+  "required": ["instruction", "mode", "tags", "role"],
+  "properties": {
+    "instruction": {
+      "type": "string",
+      "description": "The instruction or prompt to validate."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["lint", "strict", "pro"],
+      "description": "Validation mode for logic evaluation and enforcement level."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of relevant context or subject tags."
+    },
+    "role": {
+      "type": "string",
+      "description": "The assigned role or system context for the instruction."
+    }
+  },
+  "additionalProperties": false
+}
