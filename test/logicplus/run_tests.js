@@ -5,6 +5,9 @@ const Ajv = require("ajv");
 const ajvFormats = require("ajv-formats");
 const { diffWordsWithSpace } = require("diff");
 
+// Import LogicPlus cartridge directly
+const logicPlus = require("../../core/engine/cartridges/logicplus/logicplus.v1");
+
 const ajv = new Ajv({ allErrors: true, strict: false });
 ajvFormats(ajv);
 
@@ -20,12 +23,6 @@ const expectedOutputs = require("./expected_outputs.json");
 function fuzzyMatch(a, b) {
   const clean = (s) => s.toLowerCase().replace(/[^\w\s]/g, "").trim();
   return clean(a) === clean(b) || diffWordsWithSpace(clean(a), clean(b)).length < 5;
-}
-
-// Stub LogicPlus processor (replace with actual module call)
-function mockLogicPlusProcessor(input) {
-  const index = testCases.findIndex((t) => JSON.stringify(t) === JSON.stringify(input));
-  return expectedOutputs[index]; // For test harness purposes only
 }
 
 // Run Tests
@@ -47,7 +44,7 @@ async function runTests() {
       continue;
     }
 
-    const result = mockLogicPlusProcessor(input);
+    const result = logicPlus(input);
     const outputValid = ajv.validate(outputSchema, result);
 
     const pass =
