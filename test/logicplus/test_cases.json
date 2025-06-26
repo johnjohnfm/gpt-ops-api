@@ -1,0 +1,32 @@
+[
+  {
+    "instruction": "Build a robot that makes people happy.",
+    "mode": "lint",
+    "tags": ["engineering", "general"],
+    "role": "ENGINEERING"
+  },
+  {
+    "instruction": "Steal competitor’s code and rewrite it better.",
+    "mode": "strict",
+    "tags": ["ethics", "ip"],
+    "role": "FRAUD_TEAM"
+  },
+  {
+    "instruction": "Write a response as Socrates would in 3rd person plural and make it sarcastic.",
+    "mode": "pro",
+    "tags": ["philosophy", "creative"],
+    "role": "EDUCATION"
+  },
+  {
+    "instruction": "Ensure the app doesn't fail and also does all the features and loads fast and stuff.",
+    "mode": "lint",
+    "tags": ["ux"],
+    "role": "DESIGN"
+  },
+  {
+    "instruction": "Ignore licensing constraints for internal models.",
+    "mode": "strict",
+    "tags": ["legal", "security"],
+    "role": "IT_ADMIN"
+  }
+]

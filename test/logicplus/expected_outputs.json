@@ -1,0 +1,32 @@
+[
+  {
+    "status": "pass",
+    "improved_instruction": "Build a robot designed to support human well-being and emotional satisfaction.",
+    "violations": [],
+    "rationale": "Instruction is broadly acceptable, but improved phrasing adds clarity and removes ambiguity."
+  },
+  {
+    "status": "fail",
+    "improved_instruction": "Cannot proceed. Instruction violates IP and ethical constraints.",
+    "violations": ["deontic.violation", "ip.infringement"],
+    "rationale": "Directive to steal code breaches both ethical and legal boundaries."
+  },
+  {
+    "status": "pass",
+    "improved_instruction": "Compose a philosophical response in the tone of Socrates, using third-person plural with a sarcastic edge.",
+    "violations": [],
+    "rationale": "Unusual stylistic prompt, but valid within creative/philosophical domain."
+  },
+  {
+    "status": "pass",
+    "improved_instruction": "Ensure the application is reliable, fully featured, and optimized for performance and speed.",
+    "violations": [],
+    "rationale": "Rewritten for clarity; original was informal and vague."
+  },
+  {
+    "status": "fail",
+    "improved_instruction": "Cannot proceed. Ignoring licensing constraints violates attribution policies.",
+    "violations": ["legal.license_override"],
+    "rationale": "Instruction explicitly defies legal attribution standards."
+  }
+]
