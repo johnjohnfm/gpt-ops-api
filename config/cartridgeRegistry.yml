@@ -1,0 +1,6 @@
+# /cartridgeRegistry.yml
+
+- name: Logic+ v1
+  path: ./cartridges/logicPlusV1.js
+  active: true
+  priority: 1
