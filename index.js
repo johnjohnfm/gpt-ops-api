@@ -3,43 +3,36 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const path = require("path");
-
-// ✅ Load env variables
-dotenv.config();
-
-// ✅ Import LogicPlus validation cartridge
-const validateInstruction = require("./core/engine/cartridges/logicplus/validateInstruction");
-
-// ✅ Optional GPT Assist
+const validateInstruction = require("./validators/validateInstruction"); // Make sure this path is valid!
 const { callGPT } = require("./utils/gptWrapper");
 const { parseGPTResponse } = require("./utils/parseResponse");
 
-const app = express();
+dotenv.config();
 
-// ✅ Middleware
+const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Health check route
-app.get("/", (req, res) => {
-  res.send("✅ GPT-Ops API is live");
-});
-
-// ✅ Main validation route
+// Validate Instruction Route
 app.post("/api/validate", async (req, res) => {
-  const {
-    instruction,
-    failure_type,
-    context_tags,
-    desired_fix_type,
-    language_register,
-    target_role,
-    mode,
-    useAI
-  } = req.body;
-
   try {
+    const {
+      instruction,
+      failure_type,
+      context_tags,
+      desired_fix_type,
+      language_register,
+      target_role,
+      mode,
+      useAI
+    } = req.body;
+
+    // ✅ Ensure required fields exist
+    if (!instruction || !mode || !target_role) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Run validation through LogicPlus or fallback
     const validation = await validateInstruction({
       instruction,
       failure_type,
@@ -51,24 +44,22 @@ app.post("/api/validate", async (req, res) => {
       useAI
     });
 
-    // ✅ Optional: enhance with GPT
+    // Optionally enhance with GPT
     if (useAI) {
-      try {
-        const gptText = await callGPT(instruction, { temperature: 0.5 });
-        const gptResult = parseGPTResponse(gptText);
-        return res.json({ ...gptResult, validator: validation });
-      } catch (error) {
-        return res.status(500).json({ error: "GPT Assist failed", details: error.message });
-      }
+      const gptText = await callGPT(instruction, { temperature: 0.5 });
+      const gptResult = parseGPTResponse(gptText);
+      return res.json({ ...gptResult, validator: validation });
     }
 
     res.json({ validator: validation });
-  } catch (err) {
-    res.status(500).json({ error: "Validation failed", details: err.message });
+
+  } catch (error) {
+    console.error("Validation Error:", error);
+    res.status(500).json({ error: "Internal server error", details: error.message });
   }
 });
 
-// ✅ Launch server
+// Start Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ GPT-Ops API running on port ${PORT}`);
