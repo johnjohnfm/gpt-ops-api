@@ -1,0 +1,40 @@
+# core/engine/system.yaml
+
+system:
+  name: GPT-OPS Core Engine
+  version: 1.0.0
+  mode: production     # Options: development, testing, production, debug
+  default_language: en
+  default_output_format: markdown
+  validate_before_execution: true
+  allow_dynamic_execution: false
+  enable_logging: true
+  log_level: info       # Options: debug, info, warn, error
+
+cartridges:
+  enabled:
+    - logic-plus-v1
+    - fallback-default
+  strict_mode: true     # If true, system will halt on invalid cartridge output
+
+fallback:
+  on_failure:
+    retry_attempts: 2
+    retry_wait_seconds: 1
+    fallback_cartridge: fallback-default
+    notify_admin: false
+
+security:
+  require_checksum_validation: true
+  enforce_license_check: true
+  checksum_algorithm: sha256
+
+interfaces:
+  allow_frontend_access: true
+  allow_gpt_assist: true
+  expose_internal_state: false
+
+metadata:
+  author: JOHNJOHNFM
+  license: GPT-OPS Custom IP License v2.1
+  updated: 2025-06-25
