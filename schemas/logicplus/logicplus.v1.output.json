@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LogicPlus Validation Output",
+  "type": "object",
+  "required": ["status", "improved_instruction", "violations", "rationale"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["pass", "fail"],
+      "description": "Validation result — instruction either passed or failed."
+    },
+    "improved_instruction": {
+      "type": "string",
+      "description": "A revised or optimized version of the input instruction."
+    },
+    "violations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of rule violations detected during validation."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Logical explanation of the outcome and any suggested changes."
+    }
+  },
+  "additionalProperties": false
+}
