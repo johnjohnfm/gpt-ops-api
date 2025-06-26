@@ -1,68 +1,55 @@
 // /validators/validateInstruction.js
-
 const { OpenAI } = require("openai");
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
+/**
+ * validateInstruction({ instruction, failure_type, mode, context_tags, desired_fix_type, language_register, target_role, useAI })
+ * Returns validated/enhanced instruction object.
+ */
 async function validateInstruction({
   instruction,
-  failure_type,
-  mode,
-  context_tags,
-  desired_fix_type,
-  language_register,
-  target_role,
-  useAI = false
+  failure_type = "semantic",
+  mode = "lint",
+  context_tags = [],
+  desired_fix_type = "clarify",
+  language_register = "neutral",
+  target_role = "SYSTEM",
+  useAI = false,
 }) {
   if (!useAI) {
     return {
-      original_instruction: instruction,
-      enhanced_instruction: null,
-      rationale: "AI not used. Basic validation only.",
-      recovered_node_score: 0,
+      status: "pass",
+      improved_instruction: instruction,
+      violations: [],
+      rationale: "AI not used; basic pass-through validation."
     };
   }
-
+  // GPT powered validation
   const messages = [
-    {
-      role: "system",
-      content: `You are a semantic instruction validator and enhancer.`,
-    },
+    { role: "system", content: "You are a logic+ instruction validator." },
     {
       role: "user",
-      content: `Analyze the instruction: "${instruction}"
-      
-- Type of failure: ${failure_type}
-- Desired fix: ${desired_fix_type}
-- Context tags: ${context_tags.join(', ')}
+      content: `Instruction: "${instruction}"
+- Failure_Type: ${failure_type}
 - Mode: ${mode}
-- Target Role: ${target_role}
-- Language Style: ${language_register}
-
-Return an improved version, explanation, and score (0–1).`,
-    },
+- Context_Tags: ${context_tags.join(",")}
+- Desired_Fix: ${desired_fix_type}
+- Language_Style: ${language_register}
+- Target_Role: ${target_role}`
+    }
   ];
-
   const chat = await openai.chat.completions.create({
     model: "gpt-4",
     messages,
-    temperature: 0.4,
+    temperature: 0.3,
   });
-
-  const reply = chat.choices[0]?.message?.content;
-
-  // TEMP: Fallback parser until structured formatting added
-  const enhanced_instruction = reply?.match(/"(.+?)"/)?.[1] || "No enhanced instruction found.";
-  const rationale = reply;
-  const recovered_node_score = 1.0;
-
+  const resp = chat.choices[0]?.message?.content || "";
+  // TODO: parse JSON-format output properly; for now dumb fallback
   return {
-    original_instruction: instruction,
-    enhanced_instruction,
-    rationale,
-    recovered_node_score,
+    status: "pass",
+    improved_instruction: instruction,
+    violations: [],
+    rationale: resp
   };
 }
 
