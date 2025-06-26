@@ -1,0 +1,20 @@
+{
+  "id": "cartridge.logicplus.v1",
+  "name": "LogicPlus Validation Engine",
+  "description": "Flagship logic validation cartridge for GPT-Ops. Ensures instructional clarity, logical integrity, deontic compliance, and IP attribution across all instructions.",
+  "version": "1.0.0",
+  "entry_point": "cartridge.logicplus.v1",
+  "input_schema": "/schemas/logicplus/logicplus.v1.input.json",
+  "output_schema": "/schemas/logicplus/logicplus.v1.output.json",
+  "modes_supported": ["lint", "strict", "pro"],
+  "dependencies": [
+    "cartridge.logicplus.validator",
+    "cartridge.logicplus.formallogic",
+    "cartridge.logicplus.deontic",
+    "cartridge.legal.attribution",
+    "cartridge.logicplus.debugger"
+  ],
+  "author": "Engineering",
+  "license": "CC-BY-NC-SA-4.0",
+  "last_updated": "2025-06-25"
+}
