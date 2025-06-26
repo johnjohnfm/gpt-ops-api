@@ -1,9 +1,8 @@
-// index.js — Main server entry for GPT-Ops API
-
+// index.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const validateInstruction = require("./validators/validateInstruction"); // Make sure this path is valid!
+const validateInstruction = require("./validators/validateInstruction"); // must be correct
 const { callGPT } = require("./utils/gptWrapper");
 const { parseGPTResponse } = require("./utils/parseResponse");
 
@@ -13,7 +12,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Validate Instruction Route
 app.post("/api/validate", async (req, res) => {
   try {
     const {
@@ -24,15 +22,13 @@ app.post("/api/validate", async (req, res) => {
       language_register,
       target_role,
       mode,
-      useAI
+      useAI = false
     } = req.body;
 
-    // ✅ Ensure required fields exist
     if (!instruction || !mode || !target_role) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Run validation through LogicPlus or fallback
     const validation = await validateInstruction({
       instruction,
       failure_type,
@@ -44,23 +40,18 @@ app.post("/api/validate", async (req, res) => {
       useAI
     });
 
-    // Optionally enhance with GPT
     if (useAI) {
       const gptText = await callGPT(instruction, { temperature: 0.5 });
       const gptResult = parseGPTResponse(gptText);
-      return res.json({ ...gptResult, validator: validation });
+      return res.json({ validator: validation, gpt: gptResult });
     }
 
     res.json({ validator: validation });
-
-  } catch (error) {
-    console.error("Validation Error:", error);
-    res.status(500).json({ error: "Internal server error", details: error.message });
+  } catch (err) {
+    console.error("Validation failure:", err);
+    res.status(500).json({ error: "Internal server error", details: err.message });
   }
 });
 
-// Start Server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ GPT-Ops API running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`✅ GPT-Ops API running on port ${PORT}`));
